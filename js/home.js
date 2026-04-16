@@ -1,5 +1,5 @@
 // home.js — Tecnomundo
- 
+
 document.addEventListener('DOMContentLoaded', () => {
     loadCategoryNav();
     loadBannerSlider();
@@ -7,16 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDynamicSections();
     setupSearch();
 });
- 
+
 function loadCategoryNav() {
     const cats = dataManager.getCategories();
     const nav  = document.getElementById('catNavInner');
     nav.innerHTML = '<a href="#" class="hl-o">🔥 Ofertas</a><a href="#" class="hl-b">✨ Novedades</a>' +
         cats.map(c => `<a href="category.html?id=${c.id}">${c.icon} ${c.name}</a>`).join('');
 }
- 
+
 let currentSlide = 0, sliderTimer;
- 
+
 function loadBannerSlider() {
     const banners = dataManager.getBanners().filter(b => b.active);
     const slider  = document.getElementById('bannerSlider');
@@ -38,14 +38,14 @@ function loadBannerSlider() {
     });
     if (banners.length > 1) sliderTimer = setInterval(advanceSlide, 5000);
 }
- 
+
 function advanceSlide() {
     const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('#slideDots .dot');
     slides[currentSlide].classList.remove('active'); dots[currentSlide]?.classList.remove('active');
     currentSlide=(currentSlide+1)%slides.length;
     slides[currentSlide].classList.add('active'); dots[currentSlide]?.classList.add('active');
 }
- 
+
 function goToSlide(n) {
     clearInterval(sliderTimer);
     const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('#slideDots .dot');
@@ -54,14 +54,14 @@ function goToSlide(n) {
     slides[currentSlide].classList.add('active'); dots[currentSlide]?.classList.add('active');
     sliderTimer=setInterval(advanceSlide,5000);
 }
- 
+
 function loadCategoryStrip() {
     const cats=dataManager.getCategories();
     const grid=document.getElementById('catsIconsGrid');
     if(!cats.length){grid.innerHTML='<p style="color:#999;grid-column:1/-1;">Sin categorías. Agregá desde el Panel Admin.</p>';return;}
     grid.innerHTML=cats.map(c=>`<a href="category.html?id=${c.id}" class="cat-icon-item"><div class="cat-icon-circle">${c.icon}</div><span class="cat-icon-label">${c.name}</span></a>`).join('');
 }
- 
+
 function loadDynamicSections() {
     const sections=dataManager.getSections().filter(s=>s.active).sort((a,b)=>a.order-b.order);
     const products=dataManager.getProducts();
@@ -82,19 +82,20 @@ function loadDynamicSections() {
         container.innerHTML=`<section class="prod-section"><div class="section-head"><h2>Productos destacados</h2></div><div class="prod-grid">${products.slice(0,10).map(p=>renderCard(p)).join('')}</div></section>`;
     }
 }
- 
+
 function renderCard(p){
     const d=p.oldPrice?Math.round((1-p.price/p.oldPrice)*100):0;
-    return `<a href="product.html?id=${p.id}" class="prod-card">
+    const url=`product.html?id=${p.id}`;
+    return `<div class="prod-card" onclick="window.location='${url}'" style="cursor:pointer">
         ${d>0?`<span class="disc-badge">${d}% OFF</span>`:''}
         <img class="prod-img" src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/300x300?text=Sin+imagen'">
         <div class="prod-name">${p.name}</div>
         ${p.oldPrice?`<div class="prod-old-price">${dataManager.formatPrice(p.oldPrice)}</div>`:''}
         <div class="prod-price">${dataManager.formatPrice(p.price)}</div>
         <div class="prod-installments">12 cuotas sin interés de ${dataManager.formatPrice(p.price/12)}</div>
-    </a>`;
+    </div>`;
 }
- 
+
 function setupSearch(){
     const input=document.getElementById('searchInput');
     if(!input) return;
