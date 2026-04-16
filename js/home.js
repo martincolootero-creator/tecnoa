@@ -1,190 +1,104 @@
-// Home Page Controller
+// home.js — Tecnomundo
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadBanners();
-    loadCategories();
-    loadSections();
+    loadCategoryNav();
+    loadBannerSlider();
+    loadCategoryStrip();
+    loadDynamicSections();
     setupSearch();
-    setupNavigation();
 });
 
-// Banner Slider
-let currentBannerIndex = 0;
-let bannerInterval;
+function loadCategoryNav() {
+    const cats = dataManager.getCategories();
+    const nav  = document.getElementById('catNavInner');
+    nav.innerHTML = '<a href="#" class="hl-o">🔥 Ofertas</a><a href="#" class="hl-b">✨ Novedades</a>' +
+        cats.map(c => `<a href="category.html?id=${c.id}">${c.icon} ${c.name}</a>`).join('');
+}
 
-function loadBanners() {
+let currentSlide = 0, sliderTimer;
+
+function loadBannerSlider() {
     const banners = dataManager.getBanners().filter(b => b.active);
-    const slider = document.getElementById('bannerSlider');
-    const dotsContainer = document.getElementById('bannerDots');
-    
-    if (banners.length === 0) {
-        slider.innerHTML = '<div class="banner-slide active" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;"><div class="banner-content" style="position: static;"><h2>Bienvenido a TechMarket</h2><p>Configura banners desde el Panel Admin</p></div></div>';
+    const slider  = document.getElementById('bannerSlider');
+    const dots    = document.getElementById('slideDots');
+    if (!banners.length) {
+        slider.innerHTML = '<div class="slide active" style="background:linear-gradient(135deg,#FF6517,#4E71FD);display:flex;align-items:center;justify-content:center;"><div style="color:white;text-align:center;"><h2 style="font-size:30px;font-weight:800;">Bienvenido a Tecnomundo</h2><p style="margin-top:10px;opacity:.85;">Configurá banners desde el Panel Admin</p></div></div>';
         return;
     }
-    
-    slider.innerHTML = '';
-    dotsContainer.innerHTML = '';
-    
-    banners.forEach((banner, index) => {
-        // Create slide
-        const slide = document.createElement('div');
-        slide.className = 'banner-slide' + (index === 0 ? ' active' : '');
-        slide.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${banner.image})`;
-        slide.innerHTML = `
-            <div class="banner-content">
-                <h2>${banner.title}</h2>
-                <p>${banner.subtitle}</p>
-            </div>
-        `;
-        slide.onclick = () => window.location.href = banner.link;
-        slider.appendChild(slide);
-        
-        // Create dot
-        const dot = document.createElement('div');
-        dot.className = 'dot' + (index === 0 ? ' active' : '');
-        dot.onclick = () => goToBanner(index);
-        dotsContainer.appendChild(dot);
+    slider.innerHTML = banners.map((b,i) =>
+        `<div class="slide${i===0?' active':''}" style="background-image:url('${b.image}')" data-link="${b.link}">
+           <div class="slide-overlay"></div>
+           <div class="slide-content"><span class="slide-tag">Promoción</span><h2>${b.title}</h2><p>${b.subtitle}</p></div>
+         </div>`).join('');
+    dots.innerHTML = banners.map((_,i) => `<button class="dot${i===0?' active':''}" onclick="goToSlide(${i})"></button>`).join('');
+    slider.appendChild(dots);
+    slider.querySelectorAll('.slide').forEach(s => {
+        s.addEventListener('click', () => { if(s.dataset.link && s.dataset.link!=='#') window.location.href=s.dataset.link; });
+        s.style.cursor='pointer';
     });
-    
-    if (banners.length > 1) {
-        startBannerSlider();
-    }
+    if (banners.length > 1) sliderTimer = setInterval(advanceSlide, 5000);
 }
 
-function startBannerSlider() {
-    bannerInterval = setInterval(nextBanner, 5000);
+function advanceSlide() {
+    const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('#slideDots .dot');
+    slides[currentSlide].classList.remove('active'); dots[currentSlide]?.classList.remove('active');
+    currentSlide=(currentSlide+1)%slides.length;
+    slides[currentSlide].classList.add('active'); dots[currentSlide]?.classList.add('active');
 }
 
-function nextBanner() {
-    const banners = document.querySelectorAll('.banner-slide');
-    const dots = document.querySelectorAll('.dot');
-    
-    banners[currentBannerIndex].classList.remove('active');
-    dots[currentBannerIndex].classList.remove('active');
-    
-    currentBannerIndex = (currentBannerIndex + 1) % banners.length;
-    
-    banners[currentBannerIndex].classList.add('active');
-    dots[currentBannerIndex].classList.add('active');
+function goToSlide(n) {
+    clearInterval(sliderTimer);
+    const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('#slideDots .dot');
+    slides[currentSlide].classList.remove('active'); dots[currentSlide]?.classList.remove('active');
+    currentSlide=n;
+    slides[currentSlide].classList.add('active'); dots[currentSlide]?.classList.add('active');
+    sliderTimer=setInterval(advanceSlide,5000);
 }
 
-function goToBanner(index) {
-    const banners = document.querySelectorAll('.banner-slide');
-    const dots = document.querySelectorAll('.dot');
-    
-    banners[currentBannerIndex].classList.remove('active');
-    dots[currentBannerIndex].classList.remove('active');
-    
-    currentBannerIndex = index;
-    
-    banners[currentBannerIndex].classList.add('active');
-    dots[currentBannerIndex].classList.add('active');
-    
-    clearInterval(bannerInterval);
-    startBannerSlider();
+function loadCategoryStrip() {
+    const cats=dataManager.getCategories();
+    const grid=document.getElementById('catsIconsGrid');
+    if(!cats.length){grid.innerHTML='<p style="color:#999;grid-column:1/-1;">Sin categorías. Agregá desde el Panel Admin.</p>';return;}
+    grid.innerHTML=cats.map(c=>`<a href="category.html?id=${c.id}" class="cat-icon-item"><div class="cat-icon-circle">${c.icon}</div><span class="cat-icon-label">${c.name}</span></a>`).join('');
 }
 
-// Categories
-function loadCategories() {
-    const categories = dataManager.getCategories();
-    const grid = document.getElementById('categoriesGrid');
-    
-    if (categories.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No hay categorías. Agrégalas desde el Panel Admin.</p>';
-        return;
-    }
-    
-    grid.innerHTML = categories.map(category => `
-        <a href="category.html?id=${category.id}" class="category-card">
-            <div class="category-icon">${category.icon}</div>
-            <div class="category-name">${category.name}</div>
-        </a>
-    `).join('');
-}
-
-// Dynamic Sections
-function loadSections() {
-    const sections = dataManager.getSections().filter(s => s.active).sort((a, b) => a.order - b.order);
-    const container = document.getElementById('dynamicSections');
-    const products = dataManager.getProducts();
-    
-    container.innerHTML = sections.map(section => {
-        let sectionProducts = [];
-        
-        switch(section.type) {
-            case 'featured':
-                sectionProducts = products.filter(p => p.featured).slice(0, 8);
-                break;
-            case 'new':
-                sectionProducts = products.slice().reverse().slice(0, 8);
-                break;
-            case 'bestsellers':
-                sectionProducts = products.slice(0, 8);
-                break;
-            case 'category':
-                sectionProducts = products.filter(p => p.category === section.categoryId).slice(0, 8);
-                break;
-            default:
-                sectionProducts = products.slice(0, 8);
+function loadDynamicSections() {
+    const sections=dataManager.getSections().filter(s=>s.active).sort((a,b)=>a.order-b.order);
+    const products=dataManager.getProducts();
+    const container=document.getElementById('dynamicSections');
+    container.innerHTML=sections.map(sec=>{
+        let prods=[];
+        switch(sec.type){
+            case 'featured':    prods=products.filter(p=>p.featured).slice(0,10); break;
+            case 'new':         prods=[...products].reverse().slice(0,10); break;
+            case 'bestsellers': prods=products.slice(0,10); break;
+            case 'category':    prods=products.filter(p=>p.category===sec.categoryId).slice(0,10); break;
+            default:            prods=products.slice(0,10);
         }
-        
-        if (sectionProducts.length === 0) return '';
-        
-        return `
-            <section class="section">
-                <div class="section-header">
-                    <h2>${section.title}</h2>
-                    <a href="#">Ver todos →</a>
-                </div>
-                <div class="product-grid">
-                    ${sectionProducts.map(product => renderProduct(product)).join('')}
-                </div>
-            </section>
-        `;
+        if(!prods.length) return '';
+        return `<section class="prod-section"><div class="section-head"><h2>${sec.title}</h2><a href="#" class="see-all">Ver todos →</a></div><div class="prod-grid">${prods.map(p=>renderCard(p)).join('')}</div></section>`;
     }).join('');
+    if(!container.innerHTML.trim()){
+        container.innerHTML=`<section class="prod-section"><div class="section-head"><h2>Productos destacados</h2></div><div class="prod-grid">${products.slice(0,10).map(p=>renderCard(p)).join('')}</div></section>`;
+    }
 }
 
-function renderProduct(product) {
-    const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
-    
-    return `
-        <a href="product.html?id=${product.id}" class="product-card">
-            ${discount > 0 ? `<div class="product-badge">${discount}% OFF</div>` : ''}
-            <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x400?text=Imagen+no+disponible'">
-            <div class="product-name">${product.name}</div>
-            <div class="product-price">${dataManager.formatPrice(product.price)}</div>
-            ${product.oldPrice ? `<div class="product-old-price">${dataManager.formatPrice(product.oldPrice)}</div>` : ''}
-            <div class="product-installments">12 cuotas sin interés</div>
-        </a>
-    `;
+function renderCard(p){
+    const d=p.oldPrice?Math.round((1-p.price/p.oldPrice)*100):0;
+    return `<a href="product.html?id=${p.id}" class="prod-card">
+        ${d>0?`<span class="disc-badge">${d}% OFF`:''}
+        <img class="prod-img" src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/300x300?text=Sin+imagen'">
+        <div class="prod-name">${p.name}</div>
+        ${p.oldPrice?`<div class="prod-old-price">${dataManager.formatPrice(p.oldPrice)}</div>`:''}
+        <div class="prod-price">${dataManager.formatPrice(p.price)}</div>
+        <div class="prod-installments">12 cuotas sin interés de ${dataManager.formatPrice(p.price/12)}</div>
+    </a>`;
 }
 
-// Navigation
-function setupNavigation() {
-    const categories = dataManager.getCategories();
-    const nav = document.getElementById('navCategories');
-    
-    const categoryLinks = categories.map(cat => 
-        `<a href="category.html?id=${cat.id}">${cat.icon} ${cat.name}</a>`
-    ).join('');
-    
-    nav.innerHTML = `
-        <a href="#ofertas">🔥 Ofertas</a>
-        <a href="#nuevos">✨ Novedades</a>
-        ${categoryLinks}
-    `;
-}
-
-// Search
-function setupSearch() {
-    const searchInput = document.getElementById('searchInput');
-    
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const query = searchInput.value.trim();
-            if (query) {
-                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-            }
-        }
-    });
+function setupSearch(){
+    const input=document.getElementById('searchInput');
+    if(!input) return;
+    const go=()=>{const q=input.value.trim();if(q)window.location.href='search.html?q='+encodeURIComponent(q);};
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    document.querySelector('.search-btn')?.addEventListener('click',go);
 }
