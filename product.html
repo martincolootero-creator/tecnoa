@@ -1,319 +1,722 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Producto - TechMarket</title>
+    <title>TechMarket - Tecnología y Electrónica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #e8192c;
+            --red-dark: #c0111f;
+            --dark: #1a1a1a;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --gray-300: #e0e0e0;
+            --gray-500: #9e9e9e;
+            --gray-700: #616161;
+            --gray-900: #212121;
+            --white: #ffffff;
+            --blue-link: #1565c0;
+            --green: #2e7d32;
+            --orange: #e65100;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            font-size: 14px;
         }
 
+        /* ── TOP BAR ── */
         .top-bar {
-            background-color: #1a1a1a;
-            color: white;
-            padding: 8px 0;
-            font-size: 13px;
+            background-color: var(--dark);
+            color: #bbb;
+            font-size: 12px;
+            height: 32px;
+            display: flex;
+            align-items: center;
         }
-
-        .top-bar .container {
-            max-width: 1400px;
+        .top-bar .inner {
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .header {
-            background-color: #0066cc;
-            color: white;
-            padding: 15px 0;
-        }
-
-        .header .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 16px;
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+        .top-bar a { color: #bbb; text-decoration: none; margin-right: 20px; font-size: 12px; }
+        .top-bar a:hover { color: #fff; }
+        .top-bar .right { display: flex; align-items: center; gap: 4px; }
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
+        /* ── MAIN HEADER ── */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-300);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
         }
-
-        .container {
-            max-width: 1400px;
+        .header-inner {
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 16px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-
-        .breadcrumb {
-            padding: 15px 0;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .breadcrumb a {
-            color: #0066cc;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
+            flex-shrink: 0;
+        }
+        .logo-mark {
+            background: var(--red);
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 4px;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.5px;
         }
 
-        .product-detail {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 40px;
+        /* SEARCH */
+        .search-wrap {
+            flex: 1;
+            max-width: 640px;
+            position: relative;
         }
-
-        .product-image-container {
-            text-align: center;
-        }
-
-        .product-image-main {
+        .search-wrap input {
             width: 100%;
-            max-width: 500px;
-            height: 500px;
-            object-fit: contain;
-            margin-bottom: 20px;
+            height: 42px;
+            padding: 0 50px 0 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s;
         }
+        .search-wrap input:focus { border-color: var(--red); }
+        .search-btn {
+            position: absolute;
+            right: 0; top: 0;
+            height: 42px; width: 46px;
+            background: var(--red);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-size: 16px;
+            transition: background 0.15s;
+        }
+        .search-btn:hover { background: var(--red-dark); }
 
-        .product-info {
+        /* HEADER ACTIONS */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .hdr-btn {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--gray-700);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
         }
-
-        .product-badge {
-            background-color: #ff6b00;
+        .hdr-btn:hover { background: var(--gray-100); color: var(--dark); }
+        .hdr-btn svg { width: 22px; height: 22px; }
+        .hdr-btn.cart-btn { position: relative; }
+        .cart-badge {
+            position: absolute;
+            top: 2px; right: 6px;
+            background: var(--red);
             color: white;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 14px;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 4px;
+        }
+        .admin-hdr-btn {
+            background: var(--red);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
             font-weight: 600;
+            text-decoration: none;
+            flex-direction: row;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .admin-hdr-btn:hover { background: var(--red-dark); color: white; }
+
+        /* ── CATEGORY NAV ── */
+        .cat-nav {
+            background: var(--dark);
+            color: white;
+            position: sticky;
+            top: 68px;
+            z-index: 190;
+        }
+        .cat-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            align-items: stretch;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .cat-nav-inner::-webkit-scrollbar { display: none; }
+        .cat-nav a, .cat-nav .cat-item {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 0 14px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+            position: relative;
+            gap: 4px;
+        }
+        .cat-nav a:hover, .cat-nav .cat-item:hover {
+            color: white;
+            border-bottom-color: var(--red);
+            background: rgba(255,255,255,0.06);
+        }
+        .cat-nav a.highlight { color: #ffcc00; font-weight: 600; }
+
+        /* MEGA MENU */
+        .mega-wrap { position: relative; }
+        .mega-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-top: 3px solid var(--red);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 300;
+            min-width: 600px;
+            padding: 24px;
+            border-radius: 0 0 6px 6px;
+        }
+        .mega-wrap:hover .mega-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .mega-col h4 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-700);
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .mega-col a {
+            display: block;
+            font-size: 13px;
+            color: var(--gray-900);
+            text-decoration: none;
+            padding: 4px 0;
+            border-bottom: none;
+            height: auto;
+            white-space: normal;
+        }
+        .mega-col a:hover { color: var(--red); background: none; border-bottom: none; }
+
+        /* ── MAIN CONTENT ── */
+        .main { max-width: 1280px; margin: 0 auto; padding: 16px; }
+
+        /* BANNER SLIDER */
+        .banner-section {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .banner-slider {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 360px;
+            background: #ddd;
+        }
+        .slide {
+            display: none;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            inset: 0;
+        }
+        .slide.active { display: block; }
+        .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+        }
+        .slide-content {
+            position: absolute;
+            bottom: 40px;
+            left: 36px;
+            color: white;
+            max-width: 360px;
+        }
+        .slide-tag {
+            background: var(--red);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 2px;
             display: inline-block;
-            margin-bottom: 15px;
-            align-self: flex-start;
-        }
-
-        .product-title {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .product-price-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-        }
-
-        .product-old-price {
-            font-size: 18px;
-            color: #999;
-            text-decoration: line-through;
-            margin-bottom: 8px;
-        }
-
-        .product-price {
-            font-size: 42px;
-            font-weight: bold;
-            color: #333;
             margin-bottom: 10px;
         }
-
-        .product-installments {
+        .slide-content h2 {
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+        .slide-content p {
             font-size: 16px;
-            color: #666;
+            opacity: 0.9;
         }
-
-        .product-installments strong {
-            color: #28a745;
+        .slide-dots {
+            position: absolute;
+            bottom: 16px;
+            right: 20px;
+            display: flex;
+            gap: 6px;
         }
-
-        .buy-button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 15px;
-        }
-
-        .buy-button:hover {
-            background: #218838;
-            transform: translateY(-2px);
-        }
-
-        .add-cart-button {
-            background: #0066cc;
-            color: white;
+            transition: background 0.2s, transform 0.2s;
             border: none;
-            padding: 18px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
+        }
+        .dot.active { background: white; transform: scale(1.3); }
+
+        /* SIDE BANNERS */
+        .side-banners { display: flex; flex-direction: column; gap: 12px; }
+        .side-banner {
+            flex: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
             cursor: pointer;
-            transition: all 0.2s;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            color: white;
+            transition: transform 0.2s;
         }
+        .side-banner:hover { transform: scale(1.01); }
+        .side-banner.orange { background: linear-gradient(135deg, #e65100, #bf360c); }
+        .side-banner.teal { background: linear-gradient(135deg, #004d40, #00695c); }
+        .side-banner-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .side-banner-content p { font-size: 12px; opacity: 0.85; }
+        .side-banner-icon { font-size: 40px; margin-left: auto; opacity: 0.7; }
 
-        .add-cart-button:hover {
-            background: #0052a3;
-            transform: translateY(-2px);
-        }
-
-        .product-features {
+        /* CATEGORIES STRIP */
+        .cats-strip {
             background: white;
-            border-radius: 12px;
-            padding: 40px;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .cats-strip-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        .cats-icons {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+        }
+        .cat-icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--gray-900);
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .cat-icon-item:hover { background: var(--gray-100); }
+        .cat-icon-circle {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            transition: background 0.15s;
+        }
+        .cat-icon-item:hover .cat-icon-circle { background: #fce4e6; }
+        .cat-icon-label { font-size: 12px; font-weight: 500; text-align: center; line-height: 1.3; }
+
+        /* PRODUCT SECTIONS */
+        .prod-section { margin-bottom: 28px; }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .section-head h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .section-head .see-all {
+            color: var(--red);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .section-head .see-all:hover { text-decoration: underline; }
+
+        /* PRODUCT GRID */
+        .prod-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        .prod-card {
+            background: white;
+            border-radius: 6px;
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.15s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .prod-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .disc-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: var(--red);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+        .prod-img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+        .prod-name {
+            font-size: 13px;
+            color: var(--gray-900);
+            line-height: 1.4;
+            margin-bottom: 10px;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .prod-old-price {
+            font-size: 12px;
+            color: var(--gray-500);
+            text-decoration: line-through;
+            margin-bottom: 2px;
+        }
+        .prod-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .prod-installments {
+            font-size: 12px;
+            color: var(--green);
+            font-weight: 500;
         }
 
-        .product-features h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
+        /* PROMO BANNER */
+        .promo-banner {
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 28px;
+            height: 120px;
+            background: linear-gradient(120deg, #1a237e 0%, #283593 50%, #e8192c 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .promo-banner:hover { opacity: 0.93; }
+        .promo-banner h3 { font-size: 28px; font-weight: 800; }
+        .promo-banner p { font-size: 16px; opacity: 0.85; margin-top: 4px; }
+        .promo-banner .promo-cta {
+            margin-left: auto;
+            background: white;
+            color: var(--red);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
-        .feature-list {
-            list-style: none;
-            padding: 0;
+        /* FOOTER */
+        .footer {
+            background: var(--dark);
+            color: #bbb;
+            margin-top: 48px;
         }
-
-        .feature-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+        .footer-top {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 16px 32px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+        .footer-col h4 {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+        .footer-col a {
+            display: block;
+            color: #9e9e9e;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 8px;
+            transition: color 0.15s;
+        }
+        .footer-col a:hover { color: white; }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
             color: #666;
         }
 
-        .feature-list li:last-child {
-            border-bottom: none;
+        /* EMPTY STATE */
+        .empty {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 60px;
+            color: var(--gray-500);
         }
-
-        @media (max-width: 968px) {
-            .product-detail {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .product-image-main {
-                max-width: 100%;
-                height: 400px;
-            }
-        }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="container">
-            Envío gratis en compras mayores a $50.000
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="inner">
+        <div>
+            <a href="#">Seguí tu compra</a>
+            <a href="#">Servicio técnico</a>
+            <a href="#">Sucursales</a>
+            <a href="#">Centro de ayuda</a>
+        </div>
+        <div class="right">
+            <span>Venta telefónica: 0800-XXX-XXXX</span>
+        </div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-inner">
+        <a href="index.html" class="logo">
+            <span class="logo-mark">TM</span>
+            <span class="logo-text">TechMarket</span>
+        </a>
+
+        <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="¿Qué estás buscando?">
+            <button class="search-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </button>
+        </div>
+
+        <div class="header-actions">
+            <a href="#" class="hdr-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Mi cuenta
+            </a>
+            <a href="#" class="hdr-btn cart-btn">
+                <span class="cart-badge" id="cartCount">0</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Mi carrito
+            </a>
+            <a href="admin.html" class="hdr-btn admin-hdr-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Panel Admin
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- CATEGORY NAV -->
+<nav class="cat-nav">
+    <div class="cat-nav-inner" id="catNavInner">
+        <a href="#" class="highlight">🔥 Ofertas</a>
+        <a href="#" class="highlight" style="color:#7fc8f8;">✨ Novedades</a>
+        <!-- Dynamic categories injected by JS -->
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- BANNER + SIDE -->
+    <div class="banner-section">
+        <div class="banner-slider" id="bannerSlider">
+            <div class="slide-dots" id="slideDots"></div>
+        </div>
+        <div class="side-banners">
+            <div class="side-banner orange">
+                <div class="side-banner-content">
+                    <h3>12 cuotas sin interés</h3>
+                    <p>Con todas las tarjetas</p>
+                </div>
+                <div class="side-banner-icon">💳</div>
+            </div>
+            <div class="side-banner teal">
+                <div class="side-banner-content">
+                    <h3>Envío gratis</h3>
+                    <p>En compras mayores a $50.000</p>
+                </div>
+                <div class="side-banner-icon">🚚</div>
+            </div>
         </div>
     </div>
 
-    <header class="header">
-        <div class="container">
-            <a href="index.html" class="logo">⚡ TechMarket</a>
+    <!-- CATEGORIES STRIP -->
+    <div class="cats-strip">
+        <div class="cats-strip-title">Categorías destacadas</div>
+        <div class="cats-icons" id="catsIconsGrid"></div>
+    </div>
+
+    <!-- PROMO BANNER -->
+    <div class="promo-banner">
+        <div>
+            <h3>Tecnología al mejor precio</h3>
+            <p>Los mejores productos seleccionados para vos</p>
         </div>
-    </header>
+        <div class="promo-cta">Ver ofertas →</div>
+    </div>
 
-    <main class="container">
-        <div class="breadcrumb">
-            <a href="index.html">Inicio</a> / <a href="#" id="breadcrumb-category">Categoría</a> / <span id="breadcrumb-product">Producto</span>
+    <!-- DYNAMIC PRODUCT SECTIONS -->
+    <div id="dynamicSections"></div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-top">
+        <div class="footer-col">
+            <h4>Atención al cliente</h4>
+            <a href="#">Centro de ayuda</a>
+            <a href="#">Cómo comprar</a>
+            <a href="#">Envíos y entregas</a>
+            <a href="#">Formas de pago</a>
+            <a href="#">Cambios y devoluciones</a>
         </div>
-
-        <div class="product-detail">
-            <div class="product-image-container">
-                <img id="product-image" class="product-image-main" src="" alt="">
-            </div>
-
-            <div class="product-info">
-                <div id="product-badge-container"></div>
-                <h1 class="product-title" id="product-name"></h1>
-
-                <div class="product-price-section">
-                    <div id="product-old-price-container"></div>
-                    <div class="product-price" id="product-price"></div>
-                    <div class="product-installments">
-                        <strong>12 cuotas sin interés</strong> de <span id="installment-price"></span>
-                    </div>
-                </div>
-
-                <button class="buy-button">🛒 Comprar ahora</button>
-                <button class="add-cart-button">Agregar al carrito</button>
-            </div>
+        <div class="footer-col">
+            <h4>Sobre TechMarket</h4>
+            <a href="#">Quiénes somos</a>
+            <a href="#">Sucursales</a>
+            <a href="#">Trabajá con nosotros</a>
+            <a href="#">Vendé en TechMarket</a>
         </div>
-
-        <div class="product-features">
-            <h2>Características del producto</h2>
-            <ul class="feature-list">
-                <li>✓ Garantía oficial del fabricante</li>
-                <li>✓ Envío gratis a todo el país</li>
-                <li>✓ 30 días de cambio gratis</li>
-                <li>✓ Producto nuevo en caja sellada</li>
-            </ul>
+        <div class="footer-col">
+            <h4>Legales</h4>
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Defensa del consumidor</a>
         </div>
-    </main>
+        <div class="footer-col">
+            <h4>Seguinos</h4>
+            <a href="#">📘 Facebook</a>
+            <a href="#">📸 Instagram</a>
+            <a href="#">🐦 Twitter / X</a>
+            <a href="#">▶️ YouTube</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        Copyright © 2026 TechMarket — Todos los derechos reservados
+    </div>
+</footer>
 
-    <script src="js/data.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = parseInt(urlParams.get('id'));
-            
-            if (!productId) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const product = dataManager.getProducts().find(p => p.id === productId);
-            if (!product) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const category = dataManager.getCategories().find(c => c.id === product.category);
-            
-            // Update page
-            document.title = product.name + ' - TechMarket';
-            document.getElementById('product-name').textContent = product.name;
-            document.getElementById('product-image').src = product.image;
-            document.getElementById('product-image').alt = product.name;
-            document.getElementById('product-price').textContent = dataManager.formatPrice(product.price);
-            document.getElementById('installment-price').textContent = dataManager.formatPrice(product.price / 12);
-            
-            // Breadcrumb
-            if (category) {
-                const categoryLink = document.getElementById('breadcrumb-category');
-                categoryLink.textContent = category.name;
-                categoryLink.href = `category.html?id=${category.id}`;
-            }
-            document.getElementById('breadcrumb-product').textContent = product.name;
-            
-            // Discount badge
-            if (product.oldPrice) {
-                const discount = Math.round((1 - product.price / product.oldPrice) * 100);
-                document.getElementById('product-badge-container').innerHTML = 
-                    `<div class="product-badge">${discount}% OFF</div>`;
-                    
-                document.getElementById('product-old-price-container').innerHTML = 
-                    `<div class="product-old-price">${dataManager.formatPrice(product.oldPrice)}</div>`;
-            }
-        });
-    </script>
+<script src="js/data.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>
